@@ -35,6 +35,8 @@
     <link href="assets/css/owl.theme.default.min.css" rel="stylesheet" type="text/css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
 </head>
 
 <body>
@@ -172,7 +174,7 @@
                 <div class="contact_us_form_content" data-aos="fade-right">
                     <h5>CONTACT US</h5>
                     <h2>SEND US A MESSAGE & JOIN OUR TEAM</h2>
-                    <form id="contactpage" method="POST" action="./contact-form.php">
+                    <form id="contact-form" method="POST" action="./contact-form.php">
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="form-group mb-0">    
@@ -343,5 +345,65 @@
 <script src="assets/js/video-section.js"></script>
 <script src="assets/js/counter.js"></script>
 <script src="assets/js/animation.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('contact-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Fetch form values
+      var name = document.getElementById('fullname').value;
+      var email = document.getElementById('emailaddrs').value;
+      var phone = document.getElementById('phonenum').value;
+      var subject = document.getElementById('title').value;
+      var message = document.getElementById('comment').value;
+
+      // Send data via AJAX
+      fetch('https://script.google.com/macros/s/AKfycbwhTFXvjtewKG3ADL9uCgzg_QrYZUwOzFNTy_bGmMi2XXT36QOhmYyuWVEoDlDazENMog/exec', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          cname: name,
+          cemail: email,
+          cphone: phone,
+          csubject: subject,
+          cmessage: message,
+        }),
+      })
+        .then((response) => {
+          if (response.ok) {
+            toastr.success('Form submitted successfully!');
+            setTimeout(() => {
+              window.location.href = 'http://127.0.0.1:5500/contact.html';
+            }, 3000);
+          } else {
+            return response.text().then((text) => {
+              throw new Error(text);
+            });
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          toastr.error('There was an error submitting the form. Please try again.');
+        });
+    });
+  });
+
+  toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    positionClass: 'toast-top-full-width',
+    showDuration: 300,
+    hideDuration: 1000,
+    timeOut: 5000,
+    extendedTimeOut: 1000,
+    showEasing: 'swing',
+    hideEasing: 'linear',
+    showMethod: 'fadeIn',
+    hideMethod: 'fadeOut',
+  };
+</script>
+
 </body>
 </html>
